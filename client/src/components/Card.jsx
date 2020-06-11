@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Card (props) {
+function Card(props) {
   const dragStart = e => {
     const target = e.target;
 
@@ -15,6 +15,13 @@ function Card (props) {
     e.stopPropagation();
   }
 
+  const removeRewards = e => {
+    e.preventDefault();
+    console.log(document.getElementById(props.id));
+    const card = document.getElementById(props.id);
+    card.parentNode.removeChild(card);
+  }
+
   return (
     <div
       id={props.id}
@@ -23,7 +30,11 @@ function Card (props) {
       onDragStart={dragStart}
       onDragOver={dragOver}
     >
-    {props.children}
+      {/* <button onClick={() => {
+        alert('Delete me!')
+      }}>X</button> */}
+      <button onClick={removeRewards}>X</button>
+      {props.children}
     </div>
   )
 };
