@@ -1,4 +1,5 @@
 import React from 'react';
+import { observable, autorun, action } from 'mobx';
 
 function Board(props) {
   const drop = e => {
