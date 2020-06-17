@@ -4,19 +4,6 @@ import $ from 'jquery';
 
 function Card(props) {
 
-  // const dragStart = e => {
-  //   const target = e.target;
-
-  //   let card = e.dataTransfer.setData('card_id', target.id);
-  //   console.log('test for card id', target.id);
-  //   console.log(target.parentNode);
-
-  //   setTimeout(() => {
-  //     target.style.display = "none";
-  //   }, 0);
-  // }
-
-
   function dragStart(event) {
     const target = event.target;
     // event.dataTransfer.effectAllowed = 'copy';

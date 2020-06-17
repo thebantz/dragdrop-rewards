@@ -7,10 +7,10 @@ import { undoMiddleware, Model } from 'mobx-keystone';
 import { Undoer } from 'undoer';
 import SimpleUndo from 'simple-undo';
 import { DiagramComponent, Inject, UndoRedo } from "@syncfusion/ej2-react-diagrams";
-
-let redips = {};
+import Undo from 'undo.js';
 
 // redips initialization
+let redips = {};
 redips.init = function () {
   let num = 0,			// number of successfully placed elements
     rd = REDIPS.drag;	// reference to REDIPS.drag lib
@@ -160,7 +160,7 @@ class Swimlanes extends React.Component {
       // Use traditional 'for loops' for IE 11
       for (let mutation of mutationsList) {
         if (mutation.type === 'childList') {
-          console.log('A child node has been added or removed.');
+          console.log('A child node has been added or removed.', mutation);
         }
         else if (mutation.type === 'attributes') {
           console.log('The ' + mutation.attributeName + ' attribute was modified.');
@@ -168,8 +168,89 @@ class Swimlanes extends React.Component {
       }
     };
 
-    const observer = new MutationObserver(callback);
-    observer.observe(targetNode, config);
+    const observer1 = new MutationObserver(callback);
+    observer1.observe(targetNode, config);
+
+    //////////////////////////////////
+    var counter = 0;
+    var stack = new Undo.Stack();
+    var ignoreAction = false;
+
+    var Action = Undo.Command.extend({
+      constructor: function (records) {
+        this.records = records;
+      },
+
+      execute: function () { },
+      undo: function () {
+        this.records.forEach((record) => {
+          if (record.addedNodes.length > 0) {
+            ignoreAction = true;
+            $('#table1').find(record.addedNodes).remove();
+          }
+          if (record.removedNodes.length > 0) {
+            record.removedNodes.forEach(reAddNode);
+          }
+        });
+      },
+      redo: function () {
+        this.records.forEach((record) => {
+          if (record.addedNodes.length > 0) {
+            record.addedNodes.forEach(reAddNode);
+          }
+          if (record.removedNodes.length > 0) {
+            ignoreAction = true;
+            $('#table1').find(record.removedNodes).remove();
+          }
+        });
+      }
+    });
+
+    var observer = new MutationObserver((records) => {
+      if (ignoreAction) {
+        ignoreAction = false;
+        return;
+      }
+      Action.execute(new Action(records));
+    });
+
+    function reAddNode(node) {
+      var prev;
+      ignoreAction = true;
+      if ((prev = node.dataset.prev)) {
+        $('#table1').find('[data-id="' + prev + '"]').after(node);
+      } else {
+        $('#table1').prepend(node);
+      }
+    }
+
+    Action.changed = function () {
+      $('#undo').prop('enabled', !Action.canUndo());
+      $('#redo').prop('enabled', !Action.canRedo());
+    };
+    observer.observe($('#table1').get(0), {
+      childList: true
+    });
+
+    $(document).on('click', '.item-add', function (event) {
+      event.preventDefault();
+      counter++;
+      var id = Date.now();
+      var prev = $('#table1').children().last().data('id');
+      $('#table1').append('<div class="item" data-id="' + id + '" ' + (prev ? 'data-prev="' + prev + '"' : '') + '><h4>Item ' + counter + '</h4><button class="item-remove">Remove item</button></div>');
+    });
+    $(document).on('click', '.item-remove', function (event) {
+      event.preventDefault();
+      $(this).parent().remove();
+    });
+    $(document).on('click', '#undo', function (event) {
+      event.preventDefault();
+      Action.undo();
+    });
+    $(document).on('click', '#redo', function (event) {
+      event.preventDefault();
+      Action.redo();
+    });
   }
 
   render() {
@@ -201,7 +282,7 @@ class Swimlanes extends React.Component {
             </tr>
             <tr>
               <td className="dark">
-                <Reward id="green" className="redips-drag green redips-clone climit1_4">
+                <Reward id="green" className="redips-drag green redips-clone climit1_4 item-add">
                   Rewards 1
               </Reward>
               </td>
