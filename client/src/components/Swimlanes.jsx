@@ -5,6 +5,8 @@ import { observable, computed, decorate, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { undoMiddleware, Model } from 'mobx-keystone';
 import { Undoer } from 'undoer';
+import SimpleUndo from 'simple-undo';
+import { DiagramComponent, Inject, UndoRedo } from "@syncfusion/ej2-react-diagrams";
 
 let redips = {};
 
@@ -98,6 +100,51 @@ class Swimlanes extends React.Component {
     super(props);
 
     this.handleMobx = this.handleMobx.bind(this);
+    this.handleHistory = this.handleHistory.bind(this);
+    this.handleMutations = this.handleMutations.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleMutations();
+  }
+
+  handleHistory() {
+    function updateButtons(history) {
+      $('#undo').attr('disabled', !history.canUndo());
+      $('#redo').attr('disabled', !history.canRedo());
+    }
+
+    function setEditorContents(contents) {
+      $('#table1').val(contents);
+    }
+    console.log('history??')
+
+    $(function () {
+      var history = new SimpleUndo({
+        maxLength: 200,
+        provider: function (done) {
+          done($('#table1').val());
+        },
+        onUpdate: function () {
+          //onUpdate is called in constructor, making history undefined
+          if (!history) return;
+
+          updateButtons(history);
+        }
+      });
+
+      $('#undo').click(function () {
+        history.undo(setEditorContents);
+      });
+      $('#redo').click(function () {
+        history.redo(setEditorContents);
+      });
+      $('#table1').keypress(function () {
+        history.save();
+      });
+
+      updateButtons(history);
+    });
   }
 
   // observable for mobX
@@ -106,10 +153,32 @@ class Swimlanes extends React.Component {
     console.log(this.counter);
   }
 
+  handleMutations() {
+    const targetNode = document.getElementById('table1');
+    const config = { attributes: true, childList: true, subtree: true };
+    const callback = function (mutationsList, observer) {
+      // Use traditional 'for loops' for IE 11
+      for (let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          console.log('A child node has been added or removed.');
+        }
+        else if (mutation.type === 'attributes') {
+          console.log('The ' + mutation.attributeName + ' attribute was modified.');
+        }
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  }
+
   render() {
     return (
       <div id="redips-drag">
         <button onClick={this.handleMobx}>Compute?</button>
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+
         <table id="table1">
           <colgroup>
             <col width="100" />
