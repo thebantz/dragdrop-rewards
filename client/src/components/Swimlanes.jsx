@@ -36,6 +36,31 @@ redips.init = function () {
     }
     addEvents();
 
+    function tableToArray(tbl, opt_cellValueGetter) {
+      opt_cellValueGetter = opt_cellValueGetter || function (td) { return td.textContent || td.innerText; };
+      var twoD = [];
+      for (var rowCount = tbl.rows.length, rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        twoD.push([]);
+      }
+      for (var rowIndex = 1, tr; rowIndex < rowCount - 2; rowIndex++) { // rowIndex does not exclude category and the message at bottom
+        var tr = tbl.rows[rowIndex];
+        for (var colIndex = 2, colCount = tr.cells.length, offset = 0; colIndex < colCount; colIndex++) { // excluded clone library and  empty gispace
+          var td = tr.cells[colIndex], text = opt_cellValueGetter(td, colIndex, rowIndex, tbl);
+          while (twoD[rowIndex].hasOwnProperty(colIndex + offset)) {
+            offset++;
+          }
+          for (var i = 0, colSpan = parseInt(td.colSpan, 10) || 1; i < colSpan; i++) {
+            for (var j = 0, rowSpan = parseInt(td.rowSpan, 10) || 1; j < rowSpan; j++) {
+              twoD[rowIndex + j][colIndex + offset + i] = text;
+            }
+          }
+        }
+      }
+      console.log(twoD);
+    }
+
+    var table = document.getElementById('table1');
+    tableToArray(table);
 
     // if the DIV element was dropped to allowed cell
     if (targetCell.className.indexOf(divClass.green) > -1 ||
@@ -65,25 +90,14 @@ else if (window.attachEvent) {
   window.attachEvent('onload', redips.init);
 }
 
-// const removeRewards = e => {
-//   e.preventDefault();
-//   console.log('hello');
-//   // console.log(document.getElementById(props.id));
-//   const card = document.getElementById(e.target.parentNode);
-//   card.removeChild(card);
-// }
-
-
 class Swimlanes extends React.Component {
   constructor(props) {
     super(props);
 
-    this.removeCard = this.removeCard.bind(this);
   }
 
-  removeCard(e) {
-    console.log('removeeee', e)
-  }
+  // observable for mobX
+
 
 
   render() {
