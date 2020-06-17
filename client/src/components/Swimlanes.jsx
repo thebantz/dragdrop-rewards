@@ -3,13 +3,6 @@ import Reward from './Reward.jsx'
 import $ from 'jquery';
 
 
-const removeRewards = e => {
-  e.preventDefault();
-  const card = document.getElementById(e.target.parentNode);
-  card.removeChild(card);
-}
-
-
 let redips = {};
 
 // redips initialization
@@ -42,8 +35,7 @@ redips.init = function () {
       });
     }
     addEvents();
-    document.querySelector('button').onclick = () => {
-    };
+
 
     // if the DIV element was dropped to allowed cell
     if (targetCell.className.indexOf(divClass.green) > -1 ||
@@ -119,7 +111,9 @@ class Swimlanes extends React.Component {
             </tr>
             <tr>
               <td className="dark">
-                <div id="green" className="redips-drag green redips-clone climit1_4">REWARDS!</div>
+                <Reward id="green" className="redips-drag green redips-clone climit1_4">
+                  Rewards 1
+              </Reward>
               </td>
               <td className="redips-mark blank"></td>
               <td></td>
@@ -131,7 +125,7 @@ class Swimlanes extends React.Component {
             <tr>
               <td className="dark">
                 <Reward id="green" className="redips-drag green redips-clone climit1_4">
-                  Robinegg
+                  Rewards 2
               </Reward>
               </td>
               <td className="redips-mark blank"></td>
@@ -142,7 +136,11 @@ class Swimlanes extends React.Component {
               <td></td>
             </tr>
             <tr>
-              <td className="dark"></td>
+              <td className="dark">
+                <Reward id="green" className="redips-drag green redips-clone climit1_4">
+                  Rewards 3
+              </Reward>
+              </td>
               <td className="redips-mark blank"></td>
               <td></td>
               <td></td>
@@ -152,7 +150,9 @@ class Swimlanes extends React.Component {
             </tr>
             <tr>
               <td className="dark">
-                <div id="orange" className="redips-drag orange redips-clone climit1_4">Orange</div>
+                <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
+                  Rewards 4
+                </Reward>
               </td>
               <td className="redips-mark blank"></td>
               <td></td>
@@ -162,7 +162,11 @@ class Swimlanes extends React.Component {
               <td></td>
             </tr>
             <tr>
-              <td className="dark"></td>
+              <td className="dark">
+                <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
+                  Rewards 5
+                </Reward>
+              </td>
               <td className="redips-mark blank"></td>
               <td></td>
               <td></td>
@@ -171,7 +175,11 @@ class Swimlanes extends React.Component {
               <td></td>
             </tr>
             <tr>
-              <td className="dark"></td>
+              <td className="dark">
+                <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
+                  Rewards 6
+                </Reward>
+              </td>
               <td className="redips-mark blank"></td>
               <td className="dark redips-single" title="Single content cell"></td>
               <td></td>
