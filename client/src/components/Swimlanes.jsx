@@ -1,7 +1,10 @@
 import React from 'react';
 import Reward from './Reward.jsx'
 import $ from 'jquery';
-
+import { observable, computed, decorate, action } from 'mobx';
+import { observer } from 'mobx-react';
+import { undoMiddleware, Model } from 'mobx-keystone';
+import { Undoer } from 'undoer';
 
 let redips = {};
 
@@ -89,20 +92,24 @@ if (window.addEventListener) {
 else if (window.attachEvent) {
   window.attachEvent('onload', redips.init);
 }
-
 class Swimlanes extends React.Component {
+  counter = 0;
   constructor(props) {
     super(props);
 
+    this.handleMobx = this.handleMobx.bind(this);
   }
 
   // observable for mobX
-
-
+  handleMobx() {
+    this.counter++;
+    console.log(this.counter);
+  }
 
   render() {
     return (
       <div id="redips-drag">
+        <button onClick={this.handleMobx}>Compute?</button>
         <table id="table1">
           <colgroup>
             <col width="100" />
@@ -216,5 +223,10 @@ class Swimlanes extends React.Component {
     )
   }
 }
+
+decorate(Swimlanes, {
+  counter: observable,
+  handleMobx: action,
+})
 
 export default Swimlanes;
