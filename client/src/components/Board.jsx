@@ -52,21 +52,31 @@ function Board(props) {
   const drop = e => {
     e.preventDefault();
     const card_id = e.dataTransfer.getData('card_id');
-
     const card = document.getElementById(card_id);
-
     card.style.display = "block";
-    $(card).addClass('clonedDiv');
-
-    console.log('Board drop: ', card);
     e.target.appendChild(card);
 
-    var clone = e.target.ghostDragger;
+
+    // const card_id = e.dataTransfer.getData('card_id');
+    // const card = document.getElementById(card_id);
+
+    // card.style.display = "block";
+    // $(card).addClass('clonedDiv');
+
+    // console.log('Board drop: ', card);
+    // e.target.appendChild(card);
+
+    // var clone = e.target.ghostDragger;
   }
 
   const dragOver = e => {
+    //html5 docu
+    console.log("dragOver: dropEffect = " + e.dataTransfer.dropEffect + " ; effectAllowed = " + e.dataTransfer.effectAllowed);
+
     e.preventDefault();
 
+    //html5 mdn docu
+    e.dataTransfer.dropEffect = "copy"
   }
 
   return (

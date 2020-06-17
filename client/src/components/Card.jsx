@@ -19,8 +19,10 @@ function Card(props) {
 
   function dragStart(event) {
     const target = event.target;
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('card_id', target.id);//JUST ELEMENT references is ok here NO ID
+    // event.dataTransfer.effectAllowed = 'copy';
+    // event.dataTransfer.setData('card_id', target.id);//JUST ELEMENT references is ok here NO ID
+    event.dataTransfer.setData('card_id', target.id);
+    event.dataTransfer.effectAllowed = "copy";
     // console.log(event.target);
     console.log('Dragging...');
 
@@ -28,21 +30,22 @@ function Card(props) {
       target.style.display = "none";
     }, 0);
 
-    var clone = event.target.cloneNode(true);
-    event.target.parentNode.appendChild(clone);
-    console.log('parentNode', event.target.parentNode);
+    var clone = target.cloneNode(true);
+    target.parentNode.appendChild(clone);
+    console.log('parentNode', target.parentNode);
 
-    event.target.ghostDragger = clone;//SET A REFERENCE TO THE HELPER
-    // console.log('event.target.ghostDragger', event.target.ghostDragger)
+    // event.target.ghostDragger = clone;//SET A REFERENCE TO THE HELPER
+    // // console.log('event.target.ghostDragger', event.target.ghostDragger)
 
-    $(clone).addClass('clonedDiv');//NOW YOU HAVE A CLONE ELEMENT JUST USE this and remove on drag stop
-    return true;
+    // $(clone).addClass('clonedDiv');//NOW YOU HAVE A CLONE ELEMENT JUST USE this and remove on drag stop
+    // return true;
   }
 
   function dragging(event) {
     var clone = event.target.ghostDragger;
     //here set clone LEFT and TOP from event mouse moves
   }
+
   //ON STOP REMOVE HELPER ELEMENT
   function stopDrag(event) {
     var clone = event.target.ghostDragger;
@@ -67,6 +70,7 @@ function Card(props) {
       draggable={props.draggable}
       onDragStart={dragStart}
       onDragOver={dragOver}
+      onStop={stopDrag}
     >
       <button onClick={removeRewards}>X</button>
       {props.children}

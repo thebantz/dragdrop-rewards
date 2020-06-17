@@ -154,10 +154,18 @@ const ITEMS = [
 ];
 
 class Main extends Component {
-  state = {
-    [uuid()]: []
-  };
-  onDragEnd = result => {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      [uuid()]: []
+    };
+
+    this.onDragEnd = this.onDragEnd.bind(this);
+    this.addList = this.addList.bind(this);
+  }
+
+  onDragEnd = (result) => {
     const { source, destination } = result;
 
     // dropped outside the list

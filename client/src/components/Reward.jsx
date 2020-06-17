@@ -1,17 +1,19 @@
 import React from 'react';
+import $ from 'jquery';
 
-const removeCard= e => {
+const removeCard = e => {
   e.preventDefault();
-  console.log(document.getElementById(props.id));
-  const card = document.getElementById(props.id);
-  card.parentNode.removeChild(card);
+  // console.log(document.getElementById(e.target));
+  const card = document.getElementById(e.target.parentNode);
+  $(card).remove();
+  console.log(e.target.parentNode);
 }
 
 function Reward(props) {
   return <div
     id={props.id}
     className={props.className}>
-    <button onClick={removeCard}>X</button>
+    <button className="deleteButton" onClick={removeCard}>X</button>
     {props.children}
   </div>
 }

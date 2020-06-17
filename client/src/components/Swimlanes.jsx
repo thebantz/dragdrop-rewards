@@ -1,5 +1,14 @@
 import React from 'react';
 import Reward from './Reward.jsx'
+import $ from 'jquery';
+
+
+const removeRewards = e => {
+  e.preventDefault();
+  const card = document.getElementById(e.target.parentNode);
+  card.removeChild(card);
+}
+
 
 let redips = {};
 
@@ -21,6 +30,21 @@ redips.init = function () {
   rd.event.dropped = function (targetCell) {
     let divClass = rd.mark.exceptionClass, // DIV exception class
       text;
+
+    function addEvents() {
+      $(".divButton").unbind("click").click(function () {
+        $(this).parent().clone().appendTo($("body"));
+        addEvents();
+      });
+
+      $(".deleteButton").unbind("click").click(function () {
+        $(this).parent().remove();
+      });
+    }
+    addEvents();
+    document.querySelector('button').onclick = () => {
+    };
+
     // if the DIV element was dropped to allowed cell
     if (targetCell.className.indexOf(divClass.green) > -1 ||
       targetCell.className.indexOf(divClass.orange) > -1) {
@@ -106,10 +130,9 @@ class Swimlanes extends React.Component {
             </tr>
             <tr>
               <td className="dark">
-                <div id="green" className="redips-drag green redips-clone climit1_4">
-                  <button onClick={this.removeCard}>X</button>
-              Green
-              </div>
+                <Reward id="green" className="redips-drag green redips-clone climit1_4">
+                  Robinegg
+              </Reward>
               </td>
               <td className="redips-mark blank"></td>
               <td></td>
