@@ -289,7 +289,7 @@ class Swimlanes extends React.Component {
               <td className="redips-mark blank"></td>
               <td></td>
               <td></td>
-              <td className="redips-mark green-cell redips-single"></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
@@ -301,9 +301,9 @@ class Swimlanes extends React.Component {
               </td>
               <td className="redips-mark blank"></td>
               <td></td>
-              <td className="redips-mark orange-cell redips-single"></td>
               <td></td>
-              <td className="redips-mark orange-cell redips-single"></td>
+              <td></td>
+              <td></td>
               <td></td>
             </tr>
             <tr>
@@ -327,9 +327,9 @@ class Swimlanes extends React.Component {
               </td>
               <td className="redips-mark blank"></td>
               <td></td>
-              <td className="redips-mark green-cell redips-single"></td>
               <td></td>
-              <td className="redips-mark green-cell redips-single"></td>
+              <td></td>
+              <td></td>
               <td></td>
             </tr>
             <tr>
@@ -341,7 +341,7 @@ class Swimlanes extends React.Component {
               <td className="redips-mark blank"></td>
               <td></td>
               <td></td>
-              <td className="redips-mark orange-cell redips-single"></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
