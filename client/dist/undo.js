@@ -79,9 +79,28 @@
       this.savePosition = this.stackPosition;
       this.changed();
 
+      ////////////////
       var saveBtn = document.querySelector('.save');
-      var  
+      var tableBody = document.querySelector('tbody');
+      var tableRow = document.querySelector('.inputRow');
+      var tableCell = document.querySelector('.tableField');
+      var twoDArray = [];
 
+      saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (twoDArray.length === 0) {
+          return;
+        }
+
+        tableRow.forEach(row => {
+          twoDArray.push(row.innerHTML)
+        });
+
+
+      }, false);
+
+      console.log(twoDArray);
 
 
 

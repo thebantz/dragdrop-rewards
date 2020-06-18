@@ -169,85 +169,85 @@ class Swimlanes extends React.Component {
     // const observer = new MutationObserver(callback);
     // observer.observe(targetNode, config);
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    var $ = document.querySelector.bind(document);
-    var table = $('#table1');
-    var undo = $('.undo');
-    var redo = $('.redo');
-    var save = $('.save');
-    var startValue = table.innerHTML;
-    var newValue = '';
+    document.addEventListener("DOMContentLoaded", function () {
+      var $ = document.querySelector.bind(document);
+      var table = $('#table1');
+      var undo = $('.undo');
+      var redo = $('.redo');
+      var save = $('.save');
+      var startValue = table.innerHTML;
+      var newValue = '';
 
-    var stack = new Undo.Stack();
+      var stack = new Undo.Stack();
 
-    var EditCommand = Undo.Command.extend({
-      constructor: function (table, oldValue, newValue) {
-        this.table = table;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-      },
-      execute: function () { },
-      undo: function () {
-        blocked = true;
-        this.table.innerHTML = this.oldValue;
-      },
-      redo: function () {
-        blocked = true;
-        this.table.innerHTML = this.newValue;
-      },
-    });
+      var EditCommand = Undo.Command.extend({
+        constructor: function (table, oldValue, newValue) {
+          this.table = table;
+          this.oldValue = oldValue;
+          this.newValue = newValue;
+        },
+        execute: function () { },
+        undo: function () {
+          blocked = true;
+          this.table.innerHTML = this.oldValue;
+        },
+        redo: function () {
+          blocked = true;
+          this.table.innerHTML = this.newValue;
+        },
+      });
 
-    var blocked = false;
-    var observer = new MutationObserver(function (mutations) {
-      if (blocked) {
-        blocked = false;
-        return;
+      var blocked = false;
+      var observer = new MutationObserver(function (mutations) {
+        if (blocked) {
+          blocked = false;
+          return;
+        }
+        newValue = table.innerHTML;
+        stack.execute(new EditCommand(table, startValue, newValue));
+        startValue = newValue;
+      });
+
+      let options = {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        characterDataOldValue: true,
+        subtree: true
+      };
+
+      observer.observe(table, options);
+
+      function stackUI() {
+        redo.disabled = !stack.canRedo();
+        undo.disabled = !stack.canUndo();
       }
-      newValue = table.innerHTML;
-      stack.execute(new EditCommand(table, startValue, newValue));
-      startValue = newValue;
-    });
-
-    let options = {
-      attributes: true,
-      childList: true,
-      characterData: true,
-      characterDataOldValue: true,
-      subtree: true
-    };
-
-    observer.observe(table, options);
-
-    function stackUI() {
-      redo.disabled = !stack.canRedo();
-      undo.disabled = !stack.canUndo();
-    }
-    stackUI();
-
-    stack.changed = function () {
       stackUI();
-    };
 
-    save.addEventListener("click", function () {
-      table.addEventListener("change", () => {
-        console.log('save from swimlanes??')
-        sessionStorage.setItem("autosave", table.value);
-      })
-      stack.save();
-    });
+      stack.changed = function () {
+        stackUI();
+      };
 
-    redo.addEventListener('click', function () {
-      stack.redo();
-      // observer.disconnect();
-      // observer.observe(table, options);
-    });
+      save.addEventListener("click", function () {
+        table.addEventListener("change", () => {
+          console.log('save from swimlanes??')
+          sessionStorage.setItem("autosave", table.value);
+        })
+        stack.save();
+      });
 
-    undo.addEventListener('click', function () {
-      stack.undo();
-      // observer.disconnect();
-      // observer.observe(table, options);
+      redo.addEventListener('click', function () {
+        stack.redo();
+        // observer.disconnect();
+        // observer.observe(table, options);
+      });
+
+      undo.addEventListener('click', function () {
+        stack.undo();
+        // observer.disconnect();
+        // observer.observe(table, options);
+      });
     });
-    // });
     //////////////////////////////////
 
   }
@@ -280,72 +280,72 @@ class Swimlanes extends React.Component {
               <td>Category 4</td>
               <td className="dark redips-single" title="Single content cell">Category 5</td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="green" className="redips-drag green redips-clone climit1_4 item-add">
                   Rewards 1
               </Reward>
               </td>
               <td className="redips-mark blank"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="green" className="redips-drag green redips-clone climit1_4">
                   Rewards 2
               </Reward>
               </td>
               <td className="redips-mark blank"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="green" className="redips-drag green redips-clone climit1_4">
                   Rewards 3
               </Reward>
               </td>
               <td className="redips-mark blank"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
                   Rewards 4
                 </Reward>
               </td>
               <td className="redips-mark blank"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
                   Rewards 5
                 </Reward>
               </td>
               <td className="redips-mark blank"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
+              <td className="tableField"></td>
             </tr>
-            <tr>
+            <tr className="inputRow">
               <td className="dark">
                 <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
                   Rewards 6
