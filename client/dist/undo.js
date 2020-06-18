@@ -78,6 +78,26 @@
     save: function () {
       this.savePosition = this.stackPosition;
       this.changed();
+
+
+      // var someData = 'The data that I want to store for later.';
+      // localStorage.setItem('myDataKey', someData);
+
+
+      // // Get data
+      // var data = localStorage.getItem('myDataKey');
+
+
+      // //////////
+      // var $ = document.querySelector.bind(document);
+      // var table = $('#table1');
+      // console.log('table??', table)
+
+      // table.addEventListener("drop", (e) => {
+      //   e.preventDefault();
+      //   localStorage.setItem("autosave", table.innerHTML);
+      // })
+
     },
     dirty: function () {
       return this.stackPosition != this.savePosition;

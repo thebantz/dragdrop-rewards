@@ -2,11 +2,7 @@ import React from 'react';
 import Reward from './Reward.jsx'
 import $ from 'jquery';
 import { observable, computed, decorate, action } from 'mobx';
-import { observer } from 'mobx-react';
-import { undoMiddleware, Model } from 'mobx-keystone';
-import { Undoer } from 'undoer';
 import SimpleUndo from 'simple-undo';
-import { DiagramComponent, Inject, UndoRedo } from "@syncfusion/ej2-react-diagrams";
 import Undo from 'undo.js';
 
 // redips initialization
@@ -65,7 +61,7 @@ redips.init = function () {
     }
 
     var table = document.getElementById('table1');
-    tableToArray(table);
+    tableToArray(table)
 
     // if the DIV element was dropped to allowed cell
     if (targetCell.className.indexOf(divClass.green) > -1 ||
@@ -94,6 +90,7 @@ if (window.addEventListener) {
 else if (window.attachEvent) {
   window.attachEvent('onload', redips.init);
 }
+
 class Swimlanes extends React.Component {
   counter = 0;
   constructor(props) {
@@ -171,70 +168,86 @@ class Swimlanes extends React.Component {
 
     // const observer = new MutationObserver(callback);
     // observer.observe(targetNode, config);
-    document.addEventListener("DOMContentLoaded", function () {
-      var $ = document.querySelector.bind(document);
-      var table = $('#table1');
-      var undo = $('#undo');
-      var redo = $('#redo');
-      var startValue = table.innerHTML;
-      var newValue = '';
 
-      var stack = new Undo.Stack();
+    // document.addEventListener("DOMContentLoaded", function () {
+    var $ = document.querySelector.bind(document);
+    var table = $('#table1');
+    var undo = $('.undo');
+    var redo = $('.redo');
+    var save = $('.save');
+    var startValue = table.innerHTML;
+    var newValue = '';
 
-      var EditCommand = Undo.Command.extend({
-        constructor: function (table, oldValue, newValue) {
-          this.table = table;
-          this.oldValue = oldValue;
-          this.newValue = newValue;
-        },
-        execute: function () { },
-        undo: function () {
-          blocked = true;
-          this.table.innerHTML = this.oldValue;
-        },
-        redo: function () {
-          blocked = true;
-          this.table.innerHTML = this.newValue;
-        }
-      });
+    var stack = new Undo.Stack();
 
-      var blocked = false;
-      var observer = new MutationObserver(function (mutations) {
-        if (blocked) {
-          blocked = false;
-          return;
-        }
-        newValue = table.innerHTML;
-        stack.execute(new EditCommand(table, startValue, newValue));
-        startValue = newValue;
-      });
-
-      observer.observe(table, {
-        attributes: true,
-        childList: true,
-        characterData: true,
-        characterDataOldValue: true,
-        subtree: true
-      });
-
-      function stackUI() {
-        redo.disabled = !stack.canRedo();
-        undo.disabled = !stack.canUndo();
-      }
-      stackUI();
-
-      stack.changed = function () {
-        stackUI();
-      };
-
-      redo.addEventListener('click', function () {
-        stack.redo();
-      });
-
-      undo.addEventListener('click', function () {
-        stack.undo();
-      });
+    var EditCommand = Undo.Command.extend({
+      constructor: function (table, oldValue, newValue) {
+        this.table = table;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+      },
+      execute: function () { },
+      undo: function () {
+        blocked = true;
+        this.table.innerHTML = this.oldValue;
+      },
+      redo: function () {
+        blocked = true;
+        this.table.innerHTML = this.newValue;
+      },
     });
+
+    var blocked = false;
+    var observer = new MutationObserver(function (mutations) {
+      if (blocked) {
+        blocked = false;
+        return;
+      }
+      newValue = table.innerHTML;
+      stack.execute(new EditCommand(table, startValue, newValue));
+      startValue = newValue;
+    });
+
+    let options = {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      characterDataOldValue: true,
+      subtree: true
+    };
+
+    observer.observe(table, options);
+
+    function stackUI() {
+      redo.disabled = !stack.canRedo();
+      undo.disabled = !stack.canUndo();
+    }
+    stackUI();
+
+    stack.changed = function () {
+      stackUI();
+    };
+
+    save.addEventListener("click", function () {
+      table.addEventListener("change", () => {
+        console.log('save from swimlanes??')
+        sessionStorage.setItem("autosave", table.value);
+      })
+      stack.save();
+    });
+
+    redo.addEventListener('click', function () {
+      stack.redo();
+      // observer.disconnect();
+      // observer.observe(table, options);
+    });
+
+    undo.addEventListener('click', function () {
+      stack.undo();
+      // observer.disconnect();
+      // observer.observe(table, options);
+    });
+    // });
     //////////////////////////////////
 
   }
@@ -243,8 +256,9 @@ class Swimlanes extends React.Component {
     return (
       <div id="redips-drag">
         <button onClick={this.handleMobx}>Compute?</button>
-        <button id="undo">Undo</button>
-        <button id="redo">Redo</button>
+        <button className="undo">Undo</button>
+        <button className="redo">Redo</button>
+        <button className="save">Save</button>
 
         <table id="table1">
           <colgroup>
@@ -366,83 +380,3 @@ decorate(Swimlanes, {
 })
 
 export default Swimlanes;
-
-// var counter = 0;
-    // var stack = new Undo.Stack();
-    // var ignoreAction = false;
-
-    // var Action = Undo.Command.extend({
-    //   constructor: function (records) {
-    //     this.records = records;
-    //   },
-
-    //   execute: function () { },
-    //   undo: function () {
-    //     this.records.forEach((record) => {
-    //       if (record.addedNodes.length > 0) {
-    //         ignoreAction = true;
-    //         $('#table1').find(record.addedNodes).remove();
-    //       }
-    //       if (record.removedNodes.length > 0) {
-    //         record.removedNodes.forEach(reAddNode);
-    //       }
-    //     });
-    //   },
-    //   redo: function () {
-    //     this.records.forEach((record) => {
-    //       if (record.addedNodes.length > 0) {
-    //         record.addedNodes.forEach(reAddNode);
-    //       }
-    //       if (record.removedNodes.length > 0) {
-    //         ignoreAction = true;
-    //         $('#table1').find(record.removedNodes).remove();
-    //       }
-    //     });
-    //   }
-    // });
-
-    // var observer = new MutationObserver((records) => {
-    //   if (ignoreAction) {
-    //     ignoreAction = false;
-    //     return;
-    //   }
-    //   Action.execute(new Action(records));
-    // });
-
-    // function reAddNode(node) {
-    //   var prev;
-    //   ignoreAction = true;
-    //   if ((prev = node.dataset.prev)) {
-    //     $('#table1').find('[data-id="' + prev + '"]').after(node);
-    //   } else {
-    //     $('#table1').prepend(node);
-    //   }
-    // }
-
-    // Action.changed = function () {
-    //   $('#undo').prop('enabled', !Action.canUndo());
-    //   $('#redo').prop('enabled', !Action.canRedo());
-    // };
-    // observer.observe($('#table1').get(0), {
-    //   childList: true
-    // });
-
-    // $(document).on('click', '.item-add', function (event) {
-    //   event.preventDefault();
-    //   counter++;
-    //   var id = Date.now();
-    //   var prev = $('#table1').children().last().data('id');
-    //   $('#table1').append('<div class="item" data-id="' + id + '" ' + (prev ? 'data-prev="' + prev + '"' : '') + '><h4>Item ' + counter + '</h4><button class="item-remove">Remove item</button></div>');
-    // });
-    // $(document).on('click', '.item-remove', function (event) {
-    //   event.preventDefault();
-    //   $(this).parent().remove();
-    // });
-    // $(document).on('click', '#undo', function (event) {
-    //   event.preventDefault();
-    //   Action.undo();
-    // });
-    // $(document).on('click', '#redo', function (event) {
-    //   event.preventDefault();
-    //   Action.redo();
-    // });
