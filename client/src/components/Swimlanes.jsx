@@ -230,19 +230,6 @@ class Swimlanes extends React.Component {
               <td className="tableField"></td>
               <td className="tableField"></td>
             </tr>
-            <tr className="inputRow">
-              <td className="dark">
-                <Reward id="orange" className="redips-drag orange redips-clone climit1_4">
-                  Rewards 6
-                </Reward>
-              </td>
-              <td className="redips-mark blank"></td>
-              <td className="dark redips-single" title="Single content cell"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td className="dark redips-single" title="Single content cell"></td>
-            </tr>
             <tr>
               <td colSpan="7" className="redips-mark blank"></td>
             </tr>
