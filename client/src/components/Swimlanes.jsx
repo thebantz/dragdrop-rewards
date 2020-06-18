@@ -5,24 +5,17 @@ import { observable, computed, decorate, action } from 'mobx';
 import SimpleUndo from 'simple-undo';
 import Undo from 'undo.js';
 
-// redips initialization
 let redips = {};
 redips.init = function () {
-  let num = 0,			// number of successfully placed elements
-    rd = REDIPS.drag;	// reference to REDIPS.drag lib
-  // set reference to message HTML elements
+  let num = 0,
+    rd = REDIPS.drag;
   redips.msg = document.getElementById('message');
-  // initialization
   rd.init();
-  // set hover color
   rd.hover.colorTd = '#9BB3DA';
-  // define "green" class name as exception for green cells
   rd.mark.exceptionClass.green = 'green-cell';
-  // define "orange" class name as exception for orange cells
   rd.mark.exceptionClass.orange = 'orange-cell';
-  // event handler called after DIV element is dropped to TD
   rd.event.dropped = function (targetCell) {
-    let divClass = rd.mark.exceptionClass, // DIV exception class
+    let divClass = rd.mark.exceptionClass,
       text;
 
     function addEvents() {
@@ -37,47 +30,10 @@ redips.init = function () {
     }
     addEvents();
 
-    function tableToArray(tbl, opt_cellValueGetter) {
-      opt_cellValueGetter = opt_cellValueGetter || function (td) { return td.textContent || td.innerText; };
-      var twoD = [];
-      for (var rowCount = tbl.rows.length, rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-        twoD.push([]);
-      }
-      for (var rowIndex = 1, tr; rowIndex < rowCount - 2; rowIndex++) { // rowIndex does not exclude category and the message at bottom
-        var tr = tbl.rows[rowIndex];
-        for (var colIndex = 2, colCount = tr.cells.length, offset = 0; colIndex < colCount; colIndex++) { // excluded clone library and  empty gispace
-          var td = tr.cells[colIndex], text = opt_cellValueGetter(td, colIndex, rowIndex, tbl);
-          while (twoD[rowIndex].hasOwnProperty(colIndex + offset)) {
-            offset++;
-          }
-          for (var i = 0, colSpan = parseInt(td.colSpan, 10) || 1; i < colSpan; i++) {
-            for (var j = 0, rowSpan = parseInt(td.rowSpan, 10) || 1; j < rowSpan; j++) {
-              twoD[rowIndex + j][colIndex + offset + i] = text;
-            }
-          }
-        }
-      }
-      console.log(twoD);
-    }
 
-    var table = document.getElementById('table1');
-    tableToArray(table)
-
-    // if the DIV element was dropped to allowed cell
     if (targetCell.className.indexOf(divClass.green) > -1 ||
       targetCell.className.indexOf(divClass.orange) > -1) {
-      // make DIV unmovable
       rd.enableDrag(false, rd.obj);
-      // increase counter
-      num++;
-      // prepare message
-      if (num < 6) {
-        text = 'Number of successfully placed elements: ' + num;
-      }
-      else {
-        text = 'Well done!';
-      }
-      // display message
       redips.msg.innerHTML = text;
     }
   };
@@ -294,7 +250,7 @@ class Swimlanes extends React.Component {
               <td className="redips-mark blank"></td>
               <td className="redips-mark blank"></td>
               <td id="message" colSpan="5" className="redips-mark dark2">Drag and drop rewards accordingly! <br />
-              The undo, redo, and save buttons are available on the top left port
+              The undo, redo, and save buttons are available on the top-left of the screen.
               </td>
             </tr>
           </tbody>

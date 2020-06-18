@@ -88,11 +88,9 @@
       return this.stackPosition != this.savePosition;
     },
     _clearRedo: function () {
-      // TODO there's probably a more efficient way for this
       this.commands = this.commands.slice(0, this.stackPosition + 1);
     },
     changed: function () {
-      // do nothing, override
     }
   });
 
@@ -120,9 +118,7 @@
     return child;
   };
 
-  // AMD support
   if (typeof define === "function" && define.amd) {
-    // Define as an anonymous module
     define(Undo);
   } else if (typeof module != "undefined" && module.exports) {
     module.exports = Undo
