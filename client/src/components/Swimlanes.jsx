@@ -96,8 +96,6 @@ class Swimlanes extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleMobx = this.handleMobx.bind(this);
-    this.handleHistory = this.handleHistory.bind(this);
     this.handleMutations = this.handleMutations.bind(this);
   }
 
@@ -105,70 +103,7 @@ class Swimlanes extends React.Component {
     this.handleMutations();
   }
 
-  handleHistory() {
-    function updateButtons(history) {
-      $('#undo').attr('disabled', !history.canUndo());
-      $('#redo').attr('disabled', !history.canRedo());
-    }
-
-    function setEditorContents(contents) {
-      $('#table1').val(contents);
-    }
-    console.log('history??')
-
-    $(function () {
-      var history = new SimpleUndo({
-        maxLength: 200,
-        provider: function (done) {
-          done($('#table1').val());
-        },
-        onUpdate: function () {
-          //onUpdate is called in constructor, making history undefined
-          if (!history) return;
-
-          updateButtons(history);
-        }
-      });
-
-      $('#undo').click(function () {
-        history.undo(setEditorContents);
-      });
-      $('#redo').click(function () {
-        history.redo(setEditorContents);
-      });
-      $('#table1').keypress(function () {
-        history.save();
-      });
-
-      updateButtons(history);
-    });
-  }
-
-  // observable for mobX
-  handleMobx() {
-    this.counter++;
-    console.log(this.counter);
-  }
-
   handleMutations() {
-    // const targetNode = document.getElementById('table1');
-    // const config = { attributes: true, childList: true, subtree: true };
-
-    // const callback = function (mutationsList, observer) {
-    //   // Use traditional 'for loops' for IE 11
-    //   for (let mutation of mutationsList) {
-    //     if (mutation.type === 'childList') {
-    //       console.log('A child node has been added or removed.', mutation);
-    //     }
-    //     else if (mutation.type === 'attributes') {
-    //       console.log('The ' + mutation.attributeName + ' attribute was modified.');
-    //     }
-    //   }
-    // };
-
-    // const observer = new MutationObserver(callback);
-    // observer.observe(targetNode, config);
-
     document.addEventListener("DOMContentLoaded", function () {
       var $ = document.querySelector.bind(document);
       var table = $('#table1');
@@ -238,24 +173,18 @@ class Swimlanes extends React.Component {
 
       redo.addEventListener('click', function () {
         stack.redo();
-        // observer.disconnect();
-        // observer.observe(table, options);
       });
 
       undo.addEventListener('click', function () {
         stack.undo();
-        // observer.disconnect();
-        // observer.observe(table, options);
       });
     });
-    //////////////////////////////////
 
   }
 
   render() {
     return (
       <div id="redips-drag">
-        <button onClick={this.handleMobx}>Compute?</button>
         <button className="undo">Undo</button>
         <button className="redo">Redo</button>
         <button className="save">Save</button>
@@ -364,8 +293,9 @@ class Swimlanes extends React.Component {
             <tr>
               <td className="redips-mark blank"></td>
               <td className="redips-mark blank"></td>
-              <td id="message" colSpan="5" className="redips-mark dark2">Set green and orange elements to the green and orange
-					cells, respectively.</td>
+              <td id="message" colSpan="5" className="redips-mark dark2">Drag and drop rewards accordingly! <br />
+              The undo, redo, and save buttons are available on the top left port
+              </td>
             </tr>
           </tbody>
         </table>
@@ -373,10 +303,5 @@ class Swimlanes extends React.Component {
     )
   }
 }
-
-decorate(Swimlanes, {
-  counter: observable,
-  handleMobx: action,
-})
 
 export default Swimlanes;

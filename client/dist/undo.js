@@ -81,18 +81,7 @@
 
       var htmlcontent = document.documentElement.outerHTML;
 
-      ///Re-enable setItem for save once we prove that we can append getItem to HTML
       localStorage.setItem('html', htmlcontent);
-
-      // //////////
-      // var $ = document.querySelector.bind(document);
-      // var table = $('#table1');
-      // console.log('table??', table)
-
-      // table.addEventListener("drop", (e) => {
-      //   e.preventDefault();
-      //   localStorage.setItem("autosave", table.innerHTML);
-      // })
 
     },
     dirty: function () {
