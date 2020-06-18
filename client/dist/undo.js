@@ -79,38 +79,10 @@
       this.savePosition = this.stackPosition;
       this.changed();
 
-      ////////////////
-      var saveBtn = document.querySelector('.save');
-      var tableBody = document.querySelector('tbody');
-      var tableRow = document.querySelector('.inputRow');
-      var tableCell = document.querySelector('.tableField');
-      var twoDArray = [];
+      var htmlcontent = document.documentElement.outerHTML;
 
-      saveBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        if (twoDArray.length === 0) {
-          return;
-        }
-
-        tableRow.forEach(row => {
-          twoDArray.push(row.innerHTML)
-        });
-
-
-      }, false);
-
-      console.log(twoDArray);
-
-
-
-      // var someData = 'The data that I want to store for later.';
-      // localStorage.setItem('myDataKey', someData);
-
-
-      // // Get data
-      // var data = localStorage.getItem('myDataKey');
-
+      ///Re-enable setItem for save once we prove that we can append getItem to HTML
+      localStorage.setItem('html', htmlcontent);
 
       // //////////
       // var $ = document.querySelector.bind(document);
