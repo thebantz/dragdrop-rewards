@@ -44,7 +44,7 @@
     "undoer": "^0.1.1",
     "uuidv4": "^6.1.0",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   },
   "devDependencies": {},
   "keywords": []
